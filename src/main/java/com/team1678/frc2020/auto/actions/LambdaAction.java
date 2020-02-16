@@ -2,13 +2,13 @@ package com.team1678.frc2020.auto.actions;
 
 public class LambdaAction implements Action {
 
-    public interface VoidInterace {
+    public interface VoidInterface {
         void f();
     }
 
-    VoidInterace mF;
+    VoidInterface mF;
 
-    public LambdaAction(VoidInterace f) {
+    public LambdaAction(VoidInterface f) {
         this.mF = f;
     }
 

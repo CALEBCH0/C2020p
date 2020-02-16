@@ -59,8 +59,9 @@ public class AutoModeSelector {
             return Optional.of(new CharacterizeDrivebaseMode(false, true));
         case CHARACTERIZE_DRIVE_STRAIGHT:
             return Optional.of(new CharacterizeDrivebaseMode(false, false));
-        case TEST_PATH:
-            return Optional.of(new TestPath(startOnLeft));
+        // TODO: add paths
+        // case TEST_PATH:
+        //     return Optional.of(new TestPath(startOnLeft));
         default:
             break;
         }

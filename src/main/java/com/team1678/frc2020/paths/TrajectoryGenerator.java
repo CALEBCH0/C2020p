@@ -16,8 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TrajectoryGenerator {
-    private static final double kMaxVelocity = 130.0;
-    private static final double kMaxAccel = 130.0;
+    private static final double kMaxVelocity = 150.0;
+    private static final double kMaxAccel = 100.0;
     private static final double kMaxCentripetalAccel = 110.0;
     private static final double kMaxVoltage = 9.0;
 
@@ -73,36 +73,117 @@ public class TrajectoryGenerator {
     // +x is towards the center of the field.
     // +y is to the left.
     // ALL POSES DEFINED FOR THE CASE THAT ROBOT STARTS ON RIGHT! (mirrored about +x axis for LEFT)
-    public static final Pose2d kHab1StartPose = new Pose2d(70.0, -45.0, Rotation2d.fromDegrees(180.0));
-    public static final Pose2d kFarRocketPose = new Pose2d(260.0, -130.0, Rotation2d.fromDegrees(-240.0));
+    
+    // Test forward
+    public static final Pose2d kTestStartPose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
+    public static final Pose2d kTestFarPose = new Pose2d(12.0, 0.0, Rotation2d.fromDegrees(0.0));
+
+    // Test turn
+    public static final Pose2d kTestTurnPose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(90.0));
+    public static final Pose2d kTestTurnPoseTurned = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
+    
+    // Test path
+    public static final Pose2d kTestPathStartPose = new Pose2d(140.0, -140.0, Rotation2d.fromDegrees(0.0));
+    public static final Pose2d kTestPathFarPose = new Pose2d(155.0, -140.0, Rotation2d.fromDegrees(0.0));
+    public static final Pose2d kTestPathTurnPose = new Pose2d(155.0, -140.0, Rotation2d.fromDegrees(180.0));
+    public static final Pose2d kTestPathTurnPoseTurned = new Pose2d(155.0, -140.0, Rotation2d.fromDegrees(0.0));
+    public static final Pose2d kTestPathReturnPose = new Pose2d(140.0, -140.0, Rotation2d.fromDegrees(0.0));
+    public static final Pose2d kTestPathResetPose = new Pose2d(140.0, -140.0, Rotation2d.fromDegrees(180.0));
+    public static final Pose2d kTestPathResetPoseTurned = new Pose2d(140.0, -140.0, Rotation2d.fromDegrees(0.0));
 
     public class TrajectorySet {
-        public class MirroredTrajectory {
-            public MirroredTrajectory(Trajectory<TimedState<Pose2dWithCurvature>> right) {
-                this.right = right;
-                this.left = TrajectoryUtil.mirrorTimed(right);
-            }
+        // public class MirroredTrajectory {
+        //     public MirroredTrajectory(Trajectory<TimedState<Pose2dWithCurvature>> right) {
+        //         this.right = right;
+        //         this.left = TrajectoryUtil.mirrorTimed(right);
+        //     }
 
-            public Trajectory<TimedState<Pose2dWithCurvature>> get(boolean left) {
-                return left ? this.left : this.right;
-            }
+        //     public Trajectory<TimedState<Pose2dWithCurvature>> get(boolean left) {
+        //         return left ? this.left : this.right;
+        //     }
 
-            public final Trajectory<TimedState<Pose2dWithCurvature>> left;
-            public final Trajectory<TimedState<Pose2dWithCurvature>> right;
-        }
+        //     public final Trajectory<TimedState<Pose2dWithCurvature>> left;
+        //     public final Trajectory<TimedState<Pose2dWithCurvature>> right;
+        // }
 
-        public final MirroredTrajectory FirstPath;
+        public final Trajectory<TimedState<Pose2dWithCurvature>> testForwardPath;
+        public final Trajectory<TimedState<Pose2dWithCurvature>> testTurnPath;
+        public final Trajectory<TimedState<Pose2dWithCurvature>> testPathForward;
+        public final Trajectory<TimedState<Pose2dWithCurvature>> testPathTurn;
+        public final Trajectory<TimedState<Pose2dWithCurvature>> testPathReturn;
 
         private TrajectorySet() {
-            FirstPath = new MirroredTrajectory(getFirstPath());
+            testForwardPath = getTestForwardPath();
+            testTurnPath = getTestTurnPath();
+            testPathForward = getTestPathForward();
+            testPathTurn = getTestPathTurn();
+            testPathReturn = getTestPathReturn();        
         }
 
-        private Trajectory<TimedState<Pose2dWithCurvature>> getFirstPath() {
+        private Trajectory<TimedState<Pose2dWithCurvature>> getTestForwardPath() {
             List<Pose2d> waypoints = new ArrayList<>();
-            waypoints.add(kHab1StartPose);
-            waypoints.add(kFarRocketPose);
-            return generateTrajectory(true, waypoints, Arrays.asList(new CentripetalAccelerationConstraint(kMaxCentripetalAccel)),
-                    kMaxVelocity, kMaxAccel, kMaxVoltage);
+            waypoints.add(kTestStartPose);
+            waypoints.add(kTestFarPose);
+            return generateTrajectory(
+                    false, 
+                    waypoints, 
+                    Arrays.asList(new CentripetalAccelerationConstraint(kMaxCentripetalAccel)),
+                    kMaxVelocity, 
+                    kMaxAccel, 
+                    kMaxVoltage);
+        }
+
+        private Trajectory<TimedState<Pose2dWithCurvature>> getTestTurnPath() {
+            List<Pose2d> waypoints = new ArrayList<>();
+            waypoints.add(kTestTurnPose);
+            waypoints.add(kTestTurnPoseTurned);
+            return generateTrajectory(
+                    false, 
+                    waypoints, 
+                    Arrays.asList(new CentripetalAccelerationConstraint(kMaxCentripetalAccel)), 
+                    kMaxVelocity, 
+                    kMaxAccel, 
+                    kMaxVoltage);
+        }
+
+        private Trajectory<TimedState<Pose2dWithCurvature>> getTestPathForward() {
+            List<Pose2d> waypoints = new ArrayList<>();
+            waypoints.add(kTestPathStartPose);
+            waypoints.add(kTestPathFarPose);
+            return generateTrajectory(
+                false, 
+                waypoints, 
+                Arrays.asList(new CentripetalAccelerationConstraint(kMaxCentripetalAccel)), 
+                kMaxVelocity, 
+                kMaxAccel, 
+                kMaxVoltage);
+        }
+
+        private Trajectory<TimedState<Pose2dWithCurvature>> getTestPathTurn() {
+            List<Pose2d> waypoints = new ArrayList<>();
+            waypoints.add(kTestPathTurnPose);
+            waypoints.add(kTestPathTurnPoseTurned);
+            return generateTrajectory(
+                false, 
+                waypoints, 
+                Arrays.asList(new CentripetalAccelerationConstraint(kMaxCentripetalAccel)), 
+                kMaxVelocity, 
+                kMaxAccel, 
+                kMaxVoltage);
+        }
+
+        private Trajectory<TimedState<Pose2dWithCurvature>> getTestPathReturn() {
+            List<Pose2d> waypoints = new ArrayList<>();
+            waypoints.add(kTestPathReturnPose);
+            waypoints.add(kTestPathResetPose);
+            waypoints.add(kTestPathResetPoseTurned);
+            return generateTrajectory(
+                false, 
+                waypoints, 
+                Arrays.asList(new CentripetalAccelerationConstraint(kMaxCentripetalAccel)), 
+                kMaxVelocity, 
+                kMaxAccel, 
+                kMaxVoltage);
         }
     }
 }
