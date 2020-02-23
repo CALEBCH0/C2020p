@@ -1,7 +1,6 @@
 package com.team1678.frc2020.auto.modes;
 
 import com.team1678.frc2020.paths.TrajectoryGenerator;
-import com.team254.lib.geometry.Rotation2d;
 import com.team1678.frc2020.auto.AutoModeEndedException;
 import com.team1678.frc2020.auto.actions.*;
 
@@ -26,6 +25,5 @@ public class TestPathMode extends AutoModeBase {
         runAction(mTestPathTurn);
         runAction(new WaitAction(0.5));
         runAction(mTestPathReturn);
-        runAction(new TurnToHeadingAction(Rotation2d.fromDegrees(0)));
     }
 }
